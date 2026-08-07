@@ -92,7 +92,7 @@ export default function HeroInvite() {
               <p className="font-display text-[10px] tracking-[0.4em] text-gold uppercase">
                 The Wedding Of
               </p>
-              <h1 className="mt-4 font-display text-2xl sm:text-3xl tracking-[0.25em] text-maroon font-bold uppercase">
+              <h1 className="mt-4 whitespace-nowrap font-display text-[clamp(16px,4.8vw,20px)] sm:text-3xl tracking-[0.2em] sm:tracking-[0.25em] text-maroon font-bold uppercase">
                 <Letters text="Ashen" start={0.35} />{" "}
                 <span className="text-gold font-normal">
                   <Letters text="&" start={0.65} />
@@ -229,7 +229,7 @@ export default function HeroInvite() {
 
         {/* BOTTOM SECTION: Couple Names, Date & Button */}
         <motion.div variants={fadeUp} className="flex w-full flex-col items-center pb-1 sm:pb-2">
-          <h1 className="font-display text-lg sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.18em] sm:tracking-[0.22em] text-maroon font-bold uppercase drop-shadow-[0_1px_2px_rgba(74,14,24,0.12)]">
+          <h1 className="whitespace-nowrap font-display text-[clamp(15px,4.2vw,18px)] tracking-[0.14em] sm:text-2xl sm:tracking-[0.22em] md:text-3xl lg:text-4xl text-maroon font-bold uppercase drop-shadow-[0_1px_2px_rgba(74,14,24,0.12)]">
             <Letters text="Ashen" start={3.0} />{" "}
             <span className="text-gold font-normal px-0.5 sm:px-1">
               <Letters text="&" start={3.25} />
@@ -246,7 +246,7 @@ export default function HeroInvite() {
             whileTap={{ scale: 0.97 }}
             type="button"
             onClick={() => router.push("/invitation")}
-            className="relative mt-3 sm:mt-4 cursor-pointer overflow-hidden rounded-full border border-gold-light/70 bg-gradient-to-r from-maroon via-maroon-deep to-maroon px-7 py-2.5 sm:px-9 sm:py-3 font-display text-[11px] sm:text-xs md:text-sm tracking-[0.22em] sm:tracking-[0.26em] text-ivory font-medium uppercase shadow-[0_8px_22px_-3px_rgba(74,14,24,0.4),0_0_15px_rgba(212,185,124,0.25)] transition-all duration-300 hover:border-gold hover:shadow-[0_12px_28px_-3px_rgba(74,14,24,0.5),0_0_22px_rgba(212,185,124,0.4)]"
+            className="relative mt-3 sm:mt-4 cursor-pointer overflow-hidden rounded-full border border-gold-light/70 bg-gradient-to-r from-maroon via-maroon-deep to-maroon px-7 py-2.5 sm:px-9 sm:py-3 font-sans text-[11px] sm:text-xs md:text-sm tracking-[0.22em] sm:tracking-[0.26em] text-ivory font-semibold uppercase shadow-[0_8px_22px_-3px_rgba(74,14,24,0.4),0_0_15px_rgba(212,185,124,0.25)] transition-all duration-300 hover:border-gold hover:shadow-[0_12px_28px_-3px_rgba(74,14,24,0.5),0_0_22px_rgba(212,185,124,0.4)]"
           >
             <span className="relative z-10">Open Invitation</span>
             {/* flowing shine sweep */}
