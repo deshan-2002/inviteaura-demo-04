@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import OrnamentalDivider from "./OrnamentalDivider";
 
@@ -62,6 +63,7 @@ function Letters({
 
 export default function HeroInvite() {
   const [showIntro, setShowIntro] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowIntro(false), 1700);
@@ -243,6 +245,7 @@ export default function HeroInvite() {
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.97 }}
             type="button"
+            onClick={() => router.push("/invitation")}
             className="relative mt-3 sm:mt-4 cursor-pointer overflow-hidden rounded-full border border-gold-light/70 bg-gradient-to-r from-maroon via-maroon-deep to-maroon px-7 py-2.5 sm:px-9 sm:py-3 font-display text-[11px] sm:text-xs md:text-sm tracking-[0.22em] sm:tracking-[0.26em] text-ivory font-medium uppercase shadow-[0_8px_22px_-3px_rgba(74,14,24,0.4),0_0_15px_rgba(212,185,124,0.25)] transition-all duration-300 hover:border-gold hover:shadow-[0_12px_28px_-3px_rgba(74,14,24,0.5),0_0_22px_rgba(212,185,124,0.4)]"
           >
             <span className="relative z-10">Open Invitation</span>
