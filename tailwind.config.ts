@@ -24,6 +24,7 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-cinzel)", "serif"],
         body: ["var(--font-cormorant)", "serif"],
+        sans: ["var(--font-poppins)", "sans-serif"],
       },
       letterSpacing: {
         widest2: "0.35em",

@@ -238,7 +238,7 @@ export default function HeroInvite() {
           </h1>
 
           <p className="mt-1 sm:mt-2 font-body text-xs sm:text-base md:text-lg italic text-ink/80 font-medium tracking-wide">
-            12th December 2026 &middot; Kandy, Sri Lanka
+            12th December 2026 &middot; Colombo, Sri Lanka
           </p>
 
           <motion.button
