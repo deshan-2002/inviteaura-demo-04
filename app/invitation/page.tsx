@@ -1,17 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform, type Variants } from "framer-motion";
 import OrnamentalDivider from "@/components/OrnamentalDivider";
 
+const spring = { type: "spring", stiffness: 60, damping: 18, mass: 0.9 } as const;
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    filter: "blur(0px)",
+    transition: spring,
+  },
+};
+
+const slideLeft = {
+  hidden: { opacity: 0, x: -64 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: spring,
+  },
+};
+
+const slideRight = {
+  hidden: { opacity: 0, x: 64 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: spring,
+  },
+};
+
+const flipIn = {
+  hidden: { opacity: 0, rotateY: 18, y: 32 },
+  visible: {
+    opacity: 1,
+    rotateY: 0,
+    y: 0,
+    transition: spring,
+  },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.85 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: spring,
+  },
+};
+
+const popIn = {
+  hidden: { opacity: 0, scale: 0.5, y: 28 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 260, damping: 16 },
   },
 };
 
@@ -19,15 +69,13 @@ const WEDDING_DATE = "2026-12-12T09:30:00+05:30";
 
 /* ---------------- Countdown ---------------- */
 function useCountdown(target: string) {
-  const [left, setLeft] = useState(() =>
-    Math.max(0, new Date(target).getTime() - Date.now())
-  );
+  const [left, setLeft] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(
-      () => setLeft(Math.max(0, new Date(target).getTime() - Date.now())),
-      1000
-    );
+    const tick = () =>
+      setLeft(Math.max(0, new Date(target).getTime() - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [target]);
 
@@ -82,16 +130,21 @@ function SectionHeading({
 function Card({
   children,
   className = "",
+  variant = fadeUp,
+  delay = 0,
 }: {
   children: React.ReactNode;
   className?: string;
+  variant?: Variants;
+  delay?: number;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      variants={variant}
+      transition={delay ? { delay } : undefined}
       className={`rounded-3xl border border-gold/25 bg-white/80 p-6 shadow-[0_10px_35px_-12px_rgba(74,14,24,0.2)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/50 sm:p-8 ${className}`}
     >
       {children}
@@ -114,12 +167,82 @@ const couple = {
 };
 
 const schedule = [
-  { time: "9.00 AM", event: "Guest Arrival" },
-  { time: "10.00 AM", event: "Poruwa Ceremony" },
-  { time: "11.30 AM", event: "Blessings" },
-  { time: "12.00 PM", event: "Lunch" },
-  { time: "6.30 PM", event: "Reception" },
-  { time: "8.00 PM", event: "Dancing & Celebration" },
+  {
+    time: "9.00 AM",
+    event: "Guest Arrival",
+    desc: "Welcome drinks & seating",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 sm:h-7 sm:w-7">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+  },
+  {
+    time: "10.00 AM",
+    event: "Poruwa Ceremony",
+    desc: "Traditional ceremony under the Poruwa",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 sm:h-7 sm:w-7">
+        <path d="M3 22h18" />
+        <path d="M6 18v-7" />
+        <path d="M10 18v-7" />
+        <path d="M14 18v-7" />
+        <path d="M18 18v-7" />
+        <path d="M3 11l9-8 9 8" />
+      </svg>
+    ),
+  },
+  {
+    time: "11.30 AM",
+    event: "Blessings",
+    desc: "Blessings from our beloved families",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 sm:h-7 sm:w-7">
+        <path d="M12 3l1.9 5.7L19.7 10l-5.8 1.9L12 17.7l-1.9-5.8L4.3 10l5.8-1.9z" />
+        <path d="M19 17l.8 2.4L22 20.2l-2.2.8L19 23.4l-.8-2.4-2.2-.8 2.2-.8z" />
+      </svg>
+    ),
+  },
+  {
+    time: "12.00 PM",
+    event: "Lunch",
+    desc: "Celebratory lunch at the venue",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 sm:h-7 sm:w-7">
+        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+        <path d="M7 2v20" />
+        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z" />
+        <path d="M21 15v7" />
+      </svg>
+    ),
+  },
+  {
+    time: "6.30 PM",
+    event: "Reception",
+    desc: "Evening reception & dinner",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 sm:h-7 sm:w-7">
+        <path d="M9 2v6l-4 6a5 5 0 0 0 10 0l-4-6V2" />
+        <path d="M9 2h6" />
+        <path d="M12 22v-5" />
+      </svg>
+    ),
+  },
+  {
+    time: "8.00 PM",
+    event: "Dancing & Celebration",
+    desc: "Music, dancing & endless joy",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 sm:h-7 sm:w-7">
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    ),
+  },
 ];
 
 const loveStory = [
@@ -156,11 +279,40 @@ export default function InvitationPage() {
   /* Personalized guest from ?guest= query */
   const [guest, setGuest] = useState("Dear Guest");
 
+  /* Back-to-top visibility */
+  const [showTop, setShowTop] = useState(false);
+
+  /* Scroll progress for hero parallax */
+  const { scrollY } = useScroll();
+  const bgY = useTransform(scrollY, [0, 700], [0, 140]);
+
+  /* Section background parallax */
+  const countdownRef = useRef<HTMLElement>(null);
+  const guestRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: countdownScroll } = useScroll({
+    target: countdownRef,
+    offset: ["start end", "end start"],
+  });
+  const { scrollYProgress: guestScroll } = useScroll({
+    target: guestRef,
+    offset: ["start end", "end start"],
+  });
+  const countdownBgY = useTransform(countdownScroll, [0, 1], ["-12%", "12%"]);
+  const guestBgY = useTransform(guestScroll, [0, 1], ["-12%", "12%"]);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const g = params.get("guest");
     if (g) setGuest(g);
   }, []);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 500);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <div className="min-h-screen w-full bg-ivory text-ink">
@@ -181,7 +333,7 @@ export default function InvitationPage() {
 
       {/* 1. HERO */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
+        <motion.div style={{ y: bgY }} className="absolute -inset-y-40 inset-x-0">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
@@ -190,7 +342,7 @@ export default function InvitationPage() {
             className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-maroon-deep/70 via-maroon-deep/45 to-ivory" />
-        </div>
+        </motion.div>
 
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-24 pt-16 text-center sm:px-6 sm:pb-28 sm:pt-20">
           <motion.p
@@ -269,10 +421,18 @@ export default function InvitationPage() {
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="The Happy Couple" title="Our Story Begins" />
 
-          <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6">
-            <Card className="text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-gold/40 bg-gradient-to-br from-maroon to-maroon-deep">
-                <span className="font-display text-3xl text-gold-light">A</span>
+          <div
+            className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6"
+            style={{ perspective: 1200 }}
+          >
+            <Card variant={flipIn} delay={0.05} className="text-center">
+              <div className="relative mx-auto h-36 w-36 overflow-hidden rounded-full border-2 border-gold/60 shadow-lg">
+                <Image
+                  src="/images/Boy.png"
+                  alt="The Groom"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <p className="mt-4 font-display text-[10px] tracking-[0.3em] uppercase text-gold sm:text-[11px]">
                 The Groom
@@ -288,9 +448,14 @@ export default function InvitationPage() {
               </p>
             </Card>
 
-            <Card className="text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-gold/40 bg-gradient-to-br from-maroon to-maroon-deep">
-                <span className="font-display text-3xl text-gold-light">N</span>
+            <Card variant={flipIn} delay={0.18} className="text-center">
+              <div className="relative mx-auto h-36 w-36 overflow-hidden rounded-full border-2 border-gold/60 shadow-lg">
+                <Image
+                  src="/images/woman.png"
+                  alt="The Bride"
+                  fill
+                  className="object-cover"
+                />
               </div>
               <p className="mt-4 font-display text-[10px] tracking-[0.3em] uppercase text-gold sm:text-[11px]">
                 The Bride
@@ -313,7 +478,7 @@ export default function InvitationPage() {
       <section className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
         <SectionHeading label="Save The Date" title="Wedding Date & Time" />
 
-        <Card className="mt-10 text-center sm:mt-12">
+        <Card variant={scaleIn} className="mt-10 text-center sm:mt-12">
           <p className="font-display text-sm tracking-[0.35em] uppercase text-gold">
             Saturday
           </p>
@@ -345,44 +510,48 @@ export default function InvitationPage() {
       </section>
 
       {/* 5. COUNTDOWN */}
-      <section className="relative overflow-hidden py-14 sm:py-20">
-        <div className="absolute inset-0">
+      <section ref={countdownRef} className="relative overflow-hidden py-14 sm:py-20">
+        <motion.div style={{ y: countdownBgY }} className="absolute -inset-y-20 inset-x-0 scale-[1.15]">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
             fill
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-maroon-deep/80" />
-        </div>
+        </motion.div>
+        <div className="absolute inset-0 bg-maroon-deep/80" />
 
         <div className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading light label="Counting Every Moment" title="The Big Day Is Near" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-10 grid grid-cols-4 gap-2 sm:gap-4"
-          >
-            {[
-              { value: days, label: "Days" },
-              { value: hours, label: "Hours" },
-              { value: minutes, label: "Minutes" },
-              { value: seconds, label: "Seconds" },
-            ].map((unit) => (
-              <div
-                key={unit.label}
-                className="flex flex-col items-center rounded-2xl border border-gold-light/40 bg-ivory/10 px-2 py-4 backdrop-blur-sm sm:py-6"
-              >
+        <motion.div
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          className="mt-10 grid grid-cols-4 gap-2 sm:gap-4"
+        >
+          {[
+            { value: days, label: "Days" },
+            { value: hours, label: "Hours" },
+            { value: minutes, label: "Minutes" },
+            { value: seconds, label: "Seconds" },
+          ].map((unit) => (
+            <motion.div
+              key={unit.label}
+              variants={popIn}
+              className="flex flex-col items-center rounded-2xl border border-gold-light/40 bg-ivory/10 px-2 py-4 backdrop-blur-sm sm:py-6"
+            >
                 <span className="font-display text-2xl font-semibold text-ivory tabular-nums sm:text-4xl">
                   {String(unit.value).padStart(2, "0")}
                 </span>
                 <span className="mt-1 font-display text-[8px] tracking-[0.25em] uppercase text-gold-light sm:text-[10px]">
                   {unit.label}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
@@ -393,8 +562,8 @@ export default function InvitationPage() {
         <SectionHeading label="Locations" title="Wedding Venues" />
 
         <div className="mt-10 flex flex-col gap-4 sm:mt-12 sm:gap-6">
-          {venues.map((venue) => (
-            <Card key={venue.name}>
+          {venues.map((venue, i) => (
+            <Card key={venue.name} variant={i % 2 === 0 ? slideLeft : slideRight}>
               <div className="flex flex-col gap-5 sm:flex-row sm:gap-6">
                 <div className="flex-1 text-center sm:text-left">
                   <p className="font-display text-[10px] tracking-[0.3em] uppercase text-gold sm:text-[11px]">
@@ -437,30 +606,50 @@ export default function InvitationPage() {
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="Plan Your Day" title="Wedding Schedule" />
 
-          <Card className="mt-10 overflow-hidden p-0 sm:mt-12">
-            <div className="divide-y divide-gold/15">
-              {schedule.map((row, i) => (
-                <motion.div
-                  key={row.event}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className={`flex items-center gap-4 px-6 py-4 sm:px-8 ${
-                    i % 2 === 0 ? "bg-white/60" : "bg-transparent"
-                  }`}
-                >
-                  <span className="w-24 shrink-0 font-display text-sm font-semibold tracking-[0.1em] text-gold sm:text-base">
-                    {row.time}
-                  </span>
-                  <span className="h-px flex-1 bg-gold/20" />
-                  <span className="font-body text-sm italic text-ink/70 sm:text-base">
-                    {row.event}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </Card>
+          <div className="relative mt-12 flex flex-col sm:mt-14">
+            <motion.span
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 1.4, ease: "easeOut" }}
+              className="absolute bottom-4 left-[27px] top-4 w-px origin-top bg-gradient-to-b from-gold/60 via-gold/40 to-gold/60 sm:left-[31px]"
+            />
+            {schedule.map((row, i) => (
+              <motion.div
+                key={row.event}
+                variants={i % 2 === 0 ? slideLeft : slideRight}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ delay: i * 0.08 }}
+                className="group relative flex gap-5 pb-7 last:pb-0 sm:gap-7"
+              >
+                <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/50 bg-ivory text-gold shadow-[0_6px_18px_-6px_rgba(74,14,24,0.3)] transition-all duration-300 group-hover:scale-110 group-hover:border-gold group-hover:bg-gradient-to-br group-hover:from-maroon group-hover:to-maroon-deep group-hover:text-gold-light sm:h-16 sm:w-16">
+                  {row.icon}
+                </div>
+                <div className="flex-1 rounded-2xl border border-gold/15 bg-white/70 p-5 shadow-[0_8px_22px_-12px_rgba(74,14,24,0.2)] backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/40 group-hover:bg-white group-hover:shadow-[0_14px_32px_-12px_rgba(74,14,24,0.35)] sm:p-6">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <h3 className="font-display text-lg font-bold uppercase tracking-[0.08em] text-maroon sm:text-xl">
+                        {row.event}
+                      </h3>
+                      <p className="mt-1.5 font-body text-base italic text-ink/70 sm:text-lg">
+                        {row.desc}
+                      </p>
+                    </div>
+                    <div className="shrink-0 rounded-2xl border border-gold/30 bg-gradient-to-br from-maroon to-maroon-deep px-4 py-2.5 text-center shadow-[0_8px_18px_-8px_rgba(74,14,24,0.45)] sm:px-5">
+                      <span className="block font-display text-lg font-bold leading-none text-gold-light sm:text-xl">
+                        {row.time.split(" ")[0]}
+                      </span>
+                      <span className="mt-1.5 block font-display text-[10px] font-semibold tracking-[0.3em] uppercase text-ivory">
+                        {row.time.split(" ")[1]}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -469,14 +658,21 @@ export default function InvitationPage() {
         <SectionHeading label="How It All Began" title="Our Love Story" />
 
         <div className="relative mt-12 flex flex-col">
-          <span className="absolute bottom-4 left-[27px] top-4 w-px bg-gradient-to-b from-gold/60 via-gold/40 to-gold/60 sm:left-[35px]" />
+          <motion.span
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
+            className="absolute bottom-4 left-[27px] top-4 w-px origin-top bg-gradient-to-b from-gold/60 via-gold/40 to-gold/60 sm:left-[35px]"
+          />
           {loveStory.map((milestone, i) => (
             <motion.div
               key={milestone.title}
-              initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              variants={slideLeft}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: i * 0.15 }}
               className="relative flex gap-5 pb-10 last:pb-0 sm:gap-7"
             >
               <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/50 bg-ivory shadow-[0_6px_18px_-6px_rgba(74,14,24,0.3)] sm:h-[70px] sm:w-[70px]">
@@ -502,30 +698,31 @@ export default function InvitationPage() {
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="Moments Together" title="Couple Gallery" />
 
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-5">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-5" style={{ perspective: 1000 }}>
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              variants={scaleIn}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
             >
               <Image
-                src="/images/couple.png"
+                src="/images/1.png"
                 alt="The couple portrait"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              variants={flipIn}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 0.12 }}
               className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
             >
               <Image
-                src="/images/couple.png"
+                src="/images/2.png"
                 alt="The couple pre-shoot"
                 fill
                 className="object-cover object-bottom transition-transform duration-700 group-hover:scale-105"
@@ -537,14 +734,15 @@ export default function InvitationPage() {
               </div>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              variants={scaleIn}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 0.24 }}
               className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
             >
               <Image
-                src="/images/couple.png"
+                src="/images/3.png"
                 alt="The couple engagement"
                 fill
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
@@ -556,14 +754,15 @@ export default function InvitationPage() {
               </div>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              variants={flipIn}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, delay: 0.36, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 0.36 }}
               className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
             >
               <Image
-                src="/images/BackgroundImage.png"
+                src="/images/4.png"
                 alt="Wedding day decor"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -579,16 +778,16 @@ export default function InvitationPage() {
       </section>
 
       {/* 10. PERSONALIZED GUEST SECTION */}
-      <section className="relative overflow-hidden py-14 sm:py-20">
-        <div className="absolute inset-0">
+      <section ref={guestRef} className="relative overflow-hidden py-14 sm:py-20">
+        <motion.div style={{ y: guestBgY }} className="absolute -inset-y-20 inset-x-0 scale-[1.15]">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
             fill
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-maroon-deep/75" />
-        </div>
+        </motion.div>
+        <div className="absolute inset-0 bg-maroon-deep/75" />
 
         <div className="relative z-10 mx-auto w-full max-w-3xl px-4 text-center sm:px-6">
           <motion.div
@@ -617,51 +816,121 @@ export default function InvitationPage() {
           <SectionHeading label="Reach Out To Us" title="Contact Information" />
 
           <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6">
-            <Card className="text-center">
-              <p className="font-display text-[10px] tracking-[0.3em] uppercase text-gold sm:text-[11px]">
-                The Bride
-              </p>
-              <h3 className="mt-2 font-display text-xl uppercase text-maroon font-bold sm:text-2xl">
+            <Card variant={slideLeft}>
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 font-display text-[10px] tracking-[0.25em] uppercase text-gold">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-3.5 w-3.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                  The Bride
+                </span>
+                <span className="font-body text-xs italic text-ink/50">+94 77 123 4567</span>
+              </div>
+              <h3 className="mt-4 font-display text-xl uppercase text-maroon font-bold sm:text-2xl">
                 {couple.bride.name}
               </h3>
-              <div className="mt-4 flex justify-center gap-3">
+              <div className="mt-5 flex justify-center gap-3">
                 <a
                   href="tel:+94771234567"
-                  className="flex-1 rounded-xl border border-gold/30 bg-ivory/70 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon transition-all duration-300 hover:border-gold hover:bg-ivory"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-maroon hover:bg-maroon hover:text-ivory hover:shadow-lg"
                 >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
                   Call
                 </a>
                 <a
                   href="https://wa.me/94771234567"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 rounded-xl border border-gold/30 bg-ivory/70 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon transition-all duration-300 hover:border-gold hover:bg-ivory"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white hover:shadow-lg"
                 >
+                  <svg
+                    viewBox="0 0 32 32"
+                    fill="currentColor"
+                    className="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
+                    aria-hidden="true"
+                  >
+                    <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.59 4.46 1.71 6.4L3.2 28.8l6.56-1.68c1.87 1.02 3.98 1.56 6.24 1.56h.01c7.06 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05a12.72 12.72 0 0 0-9.05-3.63zm0 2.4c2.79 0 5.41 1.09 7.38 3.06a10.38 10.38 0 0 1 3.06 7.39c0 5.73-4.67 10.4-10.4 10.4-1.85 0-3.66-.49-5.25-1.42l-.38-.22-3.89 1 1.04-3.79-.25-.39a10.34 10.34 0 0 1-1.58-5.51c0-5.73 4.67-10.4 10.4-10.4zm-5.66 5.99c-.19 0-.49.07-.75.35-.26.28-1 .98-1 2.38 0 1.41 1.02 2.76 1.17 2.95.14.19 1.99 3.04 4.82 4.26.67.29 1.2.47 1.61.6.67.22 1.29.19 1.77.11.54-.08 1.67-.68 1.9-1.34.24-.66.24-1.22.17-1.34-.07-.12-.26-.19-.54-.33-.28-.14-1.67-.82-1.93-.92-.26-.09-.45-.14-.64.14-.19.28-.74.92-.9 1.11-.17.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.4-1.68-1.57-1.96-.17-.28-.02-.43.13-.57.13-.13.28-.33.42-.5.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.22-.54-.45-.47-.62-.48-.16-.01-.34-.01-.53-.01z" />
+                  </svg>
                   WhatsApp
                 </a>
               </div>
             </Card>
 
-            <Card className="text-center">
-              <p className="font-display text-[10px] tracking-[0.3em] uppercase text-gold sm:text-[11px]">
-                The Groom
-              </p>
-              <h3 className="mt-2 font-display text-xl uppercase text-maroon font-bold sm:text-2xl">
+            <Card variant={slideRight} className="text-center">
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 font-display text-[10px] tracking-[0.25em] uppercase text-gold">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-3.5 w-3.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                  The Groom
+                </span>
+                <span className="font-body text-xs italic text-ink/50">+94 77 987 6543</span>
+              </div>
+              <h3 className="mt-4 font-display text-xl uppercase text-maroon font-bold sm:text-2xl">
                 {couple.groom.name}
               </h3>
-              <div className="mt-4 flex justify-center gap-3">
+              <div className="mt-5 flex justify-center gap-3">
                 <a
                   href="tel:+94779876543"
-                  className="flex-1 rounded-xl border border-gold/30 bg-ivory/70 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon transition-all duration-300 hover:border-gold hover:bg-ivory"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-maroon hover:bg-maroon hover:text-ivory hover:shadow-lg"
                 >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
                   Call
                 </a>
                 <a
                   href="https://wa.me/94779876543"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 rounded-xl border border-gold/30 bg-ivory/70 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon transition-all duration-300 hover:border-gold hover:bg-ivory"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-display text-[10px] tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white hover:shadow-lg"
                 >
+                  <svg
+                    viewBox="0 0 32 32"
+                    fill="currentColor"
+                    className="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
+                    aria-hidden="true"
+                  >
+                    <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.59 4.46 1.71 6.4L3.2 28.8l6.56-1.68c1.87 1.02 3.98 1.56 6.24 1.56h.01c7.06 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05a12.72 12.72 0 0 0-9.05-3.63zm0 2.4c2.79 0 5.41 1.09 7.38 3.06a10.38 10.38 0 0 1 3.06 7.39c0 5.73-4.67 10.4-10.4 10.4-1.85 0-3.66-.49-5.25-1.42l-.38-.22-3.89 1 1.04-3.79-.25-.39a10.34 10.34 0 0 1-1.58-5.51c0-5.73 4.67-10.4 10.4-10.4zm-5.66 5.99c-.19 0-.49.07-.75.35-.26.28-1 .98-1 2.38 0 1.41 1.02 2.76 1.17 2.95.14.19 1.99 3.04 4.82 4.26.67.29 1.2.47 1.61.6.67.22 1.29.19 1.77.11.54-.08 1.67-.68 1.9-1.34.24-.66.24-1.22.17-1.34-.07-.12-.26-.19-.54-.33-.28-.14-1.67-.82-1.93-.92-.26-.09-.45-.14-.64.14-.19.28-.74.92-.9 1.11-.17.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.4-1.68-1.57-1.96-.17-.28-.02-.43.13-.57.13-.13.28-.33.42-.5.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.63-1.51-.86-2.07-.22-.54-.45-.47-.62-.48-.16-.01-.34-.01-.53-.01z" />
+                  </svg>
                   WhatsApp
                 </a>
               </div>
@@ -676,19 +945,23 @@ export default function InvitationPage() {
           <SectionHeading label="What To Wear" title="Dress Code" />
 
           <motion.div
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+            }}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.4 }}
-            variants={fadeUp}
             className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:mt-12 sm:gap-4"
           >
             {["Traditional", "Formal", "White & Gold Theme"].map((code) => (
-              <span
+              <motion.span
                 key={code}
+                variants={popIn}
                 className="rounded-full border border-gold/40 bg-white/80 px-7 py-3 font-display text-[10px] tracking-[0.25em] uppercase text-maroon shadow-[0_8px_22px_-8px_rgba(74,14,24,0.25)] sm:text-[11px]"
               >
                 {code}
-              </span>
+              </motion.span>
             ))}
           </motion.div>
         </div>
@@ -699,8 +972,8 @@ export default function InvitationPage() {
         <SectionHeading label="Stay With Us" title="Accommodation" />
 
         <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-3 sm:gap-5">
-          {hotels.map((hotel) => (
-            <Card key={hotel.name} className="text-center">
+          {hotels.map((hotel, i) => (
+            <Card key={hotel.name} variant={popIn} delay={i * 0.1} className="text-center">
               <span className="font-display text-2xl text-gold">&#127968;</span>
               <h3 className="mt-3 font-display text-base uppercase text-maroon font-semibold tracking-[0.1em] sm:text-lg">
                 {hotel.name}
@@ -750,6 +1023,29 @@ export default function InvitationPage() {
           </p>
         </div>
       </footer>
+
+      {/* Back to top */}
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 16, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.9 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            onClick={scrollToTop}
+            aria-label="Back to top"
+            className="fixed bottom-6 right-6 z-50 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-gold-light/70 bg-gradient-to-br from-maroon to-maroon-deep text-ivory shadow-[0_10px_30px_-8px_rgba(74,14,24,0.55)] transition-colors duration-300 hover:border-gold"
+          >
+            <motion.span
+              animate={{ y: [0, -3, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+              className="text-lg leading-none"
+            >
+              &uarr;
+            </motion.span>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
