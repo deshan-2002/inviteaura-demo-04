@@ -10,16 +10,22 @@ const config: Config = {
       colors: {
         ivory: "#F6EEE0",
         champagne: "#EDE1C6",
+        navy: {
+          DEFAULT: "#1B2550",
+          deep: "#111836",
+          light: "#26356B",
+        },
         maroon: {
-          DEFAULT: "#6E1423",
-          deep: "#4A0E18",
+          DEFAULT: "#1B2550",
+          deep: "#111836",
         },
         gold: {
-          DEFAULT: "#B4913F",
-          light: "#D9BE7C",
-          soft: "#C9A961",
+          DEFAULT: "#B48C35",
+          light: "#D8BE7D",
+          soft: "#C8A962",
+          dark: "#997328",
         },
-        ink: "#3A2A1E",
+        ink: "#1F293D",
       },
       fontFamily: {
         display: ["var(--font-cinzel)", "serif"],

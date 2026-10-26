@@ -65,26 +65,6 @@ const popIn = {
   },
 };
 
-const coupleReveal = {
-  hidden: { opacity: 0, scale: 0.92, y: 48, filter: "blur(10px)" },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { type: "spring", stiffness: 55, damping: 17, mass: 0.9 },
-  },
-};
-
-const avatarZoom = {
-  hidden: { opacity: 0, scale: 0.4 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { type: "spring", stiffness: 180, damping: 15, delay: 0.15 },
-  },
-};
-
 const WEDDING_DATE = "2026-12-12T09:30:00+05:30";
 
 /* ---------------- Countdown ---------------- */
@@ -126,15 +106,15 @@ function SectionHeading({
       className="text-center"
     >
       <p
-        className={`font-sans text-[10px] tracking-[0.35em] uppercase ${
+        className={`font-sans text-[10px] sm:text-[11px] tracking-[0.35em] uppercase font-semibold ${
           light ? "text-gold-light" : "text-gold"
         }`}
       >
         {label}
       </p>
       <h2
-        className={`mt-2 font-sans text-2xl tracking-[0.1em] uppercase font-bold sm:text-3xl md:text-4xl ${
-          light ? "text-ivory" : "text-maroon"
+        className={`mt-2.5 font-sans text-2xl tracking-[0.1em] uppercase font-bold sm:text-3xl md:text-4xl ${
+          light ? "text-white" : "text-[#1B2550]"
         }`}
       >
         {title}
@@ -165,7 +145,7 @@ function Card({
       viewport={{ once: true, amount: 0.3 }}
       variants={variant}
       transition={delay ? { delay } : undefined}
-      className={`relative overflow-hidden rounded-3xl border border-gold/25 bg-white/95 p-6 shadow-[0_14px_40px_-16px_rgba(74,14,24,0.25)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/50 hover:shadow-[0_22px_50px_-18px_rgba(74,14,24,0.35)] sm:p-8 ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-gold/30 bg-white/95 p-6 shadow-[0_14px_40px_-16px_rgba(27,37,80,0.18)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[0_22px_50px_-18px_rgba(27,37,80,0.25)] sm:p-8 ${className}`}
     >
       {children}
     </motion.div>
@@ -336,25 +316,26 @@ export default function InvitationPage() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="min-h-screen w-full bg-ivory text-ink">
-      {/* Sticky top bar */}
-      <header className="sticky top-0 z-40 border-b border-gold/25 bg-ivory/85 backdrop-blur-md">
+    <div className="min-h-screen w-full bg-[#FAF5EC] text-[#1F293D]">
+      {/* Sticky top bar - light transparent */}
+      <header className="sticky top-0 z-40 border-b border-gold/20 bg-[#FAF5EC]/85 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-3 sm:px-6">
           <Link
             href="/"
-            className="font-sans text-[10px] tracking-[0.3em] uppercase text-maroon transition-colors hover:text-gold sm:text-xs"
+            className="font-sans text-[10px] tracking-[0.3em] uppercase text-[#1B2550] transition-colors hover:text-gold sm:text-xs flex items-center gap-1.5"
           >
-            &larr; Back
+            <span>&larr;</span> <span>Back</span>
           </Link>
-          <span className="font-sans text-[10px] tracking-[0.35em] uppercase text-gold sm:text-xs">
+          <span className="font-sans text-[11px] tracking-[0.35em] uppercase text-gold font-semibold sm:text-xs">
             A &amp; N
           </span>
         </div>
       </header>
 
-      {/* 1. HERO */}
-      <section className="relative overflow-hidden">
-        <motion.div style={{ y: bgY }} className="absolute -inset-y-40 inset-x-0">
+      {/* 1. HERO - Navy blue theme, compact banner height matching design */}
+      <section className="relative overflow-hidden text-center bg-gradient-to-b from-[#0D1735] via-[#142149] to-[#0A1128] py-10 sm:py-14 md:py-16">
+        {/* Background image as subtle texture */}
+        <motion.div style={{ y: bgY }} className="absolute -inset-y-20 inset-x-0 opacity-15 mix-blend-overlay pointer-events-none">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
@@ -362,15 +343,16 @@ export default function InvitationPage() {
             priority
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-maroon-deep/70 via-maroon-deep/45 to-ivory" />
         </motion.div>
+        {/* Soft golden ambient radiance */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(216,180,105,0.12)_0%,_transparent_60%)] pointer-events-none" />
 
-        <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-24 pt-16 text-center sm:px-6 sm:pb-28 sm:pt-20">
+        <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center justify-center px-5 text-center sm:px-6">
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="font-sans text-[11px] tracking-[0.4em] uppercase text-gold-light sm:text-sm"
+            className="font-display text-[10px] sm:text-xs tracking-[0.35em] uppercase text-gold-light/90"
           >
             The Wedding Of
           </motion.p>
@@ -379,7 +361,7 @@ export default function InvitationPage() {
             initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-5 font-sans text-3xl tracking-[0.16em] text-ivory font-bold uppercase drop-shadow-[0_4px_14px_rgba(74,14,24,0.45)] sm:text-5xl md:text-6xl"
+            className="mt-3 sm:mt-4 font-display text-[clamp(24px,5.5vw,44px)] tracking-[0.14em] sm:tracking-[0.18em] text-white font-bold uppercase whitespace-nowrap"
           >
             Ashen <span className="text-gold-light font-normal">&amp;</span> Nethmi
           </motion.h1>
@@ -387,8 +369,8 @@ export default function InvitationPage() {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4 font-sans text-base italic text-ivory/90 sm:text-xl"
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-2.5 sm:mt-3 font-body text-xs sm:text-sm md:text-base italic text-champagne/90 font-medium tracking-wide"
           >
             Saturday, 12th December 2026 &middot; Colombo, Sri Lanka
           </motion.p>
@@ -397,39 +379,39 @@ export default function InvitationPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="absolute bottom-8 flex flex-col items-center gap-2"
+            transition={{ delay: 1.0, duration: 0.8 }}
+            className="mt-4 sm:mt-5 flex flex-col items-center gap-1"
           >
-            <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-ivory/70">
+            <span className="font-sans text-[8px] sm:text-[9px] tracking-[0.35em] uppercase text-gold-light/60 font-medium">
               Scroll
             </span>
             <motion.span
-              animate={{ y: [0, 8, 0] }}
+              animate={{ y: [0, 6, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-              className="block h-8 w-px bg-gradient-to-b from-ivory/80 to-transparent"
+              className="block h-5 sm:h-6 w-px bg-gradient-to-b from-gold-light/60 to-transparent"
             />
           </motion.div>
         </div>
       </section>
 
       {/* 2. WELCOME MESSAGE */}
-      <section className="mx-auto w-full max-w-3xl px-4 py-14 text-center sm:px-6 sm:py-20">
+      <section className="relative mx-auto w-full max-w-3xl px-4 py-14 text-center sm:px-6 sm:py-20">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.4 }}
           variants={fadeUp}
         >
-          <p className="font-sans text-[10px] tracking-[0.35em] uppercase text-gold">
+          <p className="font-sans text-[10px] tracking-[0.35em] uppercase text-gold font-semibold">
             Welcome
           </p>
-          <h2 className="mt-2 font-sans text-2xl tracking-[0.1em] uppercase text-maroon font-bold sm:text-3xl">
+          <h2 className="mt-2.5 font-sans text-2xl tracking-[0.1em] uppercase text-[#1B2550] font-bold sm:text-3xl">
             Together With Our Families
           </h2>
           <div className="mt-5">
             <OrnamentalDivider />
           </div>
-          <p className="mx-auto mt-8 max-w-xl font-sans text-base italic leading-relaxed text-ink/80 sm:text-lg">
+          <p className="mx-auto mt-8 max-w-xl font-body text-base sm:text-lg italic leading-relaxed text-[#2D3748]">
             With hearts full of joy, together with our beloved families, we request the honour
             of your presence as we celebrate the beginning of our forever. Your blessings and
             presence will make our day truly complete.
@@ -438,7 +420,7 @@ export default function InvitationPage() {
       </section>
 
       {/* 3. COUPLE INFORMATION */}
-      <section className="border-y border-gold/20 bg-champagne/50 py-14 sm:py-20">
+      <section className="border-y border-gold/25 bg-[#F1E8D9]/70 py-14 sm:py-20">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="The Happy Couple" title="Our Story Begins" />
 
@@ -449,7 +431,7 @@ export default function InvitationPage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: 0.05 }}
-              className="group overflow-hidden rounded-3xl border border-gold/20 bg-white shadow-[0_18px_45px_-20px_rgba(74,14,24,0.3)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/40 hover:shadow-[0_26px_55px_-22px_rgba(74,14,24,0.45)]"
+              className="group overflow-hidden rounded-3xl border border-gold/30 bg-white shadow-[0_18px_45px_-20px_rgba(27,37,80,0.2)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:shadow-[0_26px_55px_-22px_rgba(27,37,80,0.3)]"
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <Image
@@ -460,17 +442,17 @@ export default function InvitationPage() {
                 />
               </div>
               <div className="p-6 text-center sm:p-7">
-                <p className="font-sans text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
+                <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">
                   The Groom
                 </p>
-                <h3 className="mt-2 font-sans text-xl font-semibold tracking-tight text-maroon sm:text-2xl">
+                <h3 className="mt-2 font-sans text-xl font-bold tracking-tight text-[#1B2550] sm:text-2xl">
                   {couple.groom.name}
                 </h3>
-                <div className="mx-auto mt-3 h-px w-10 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-                <p className="mt-3 font-sans text-sm font-light text-ink/60 sm:text-base">
+                <div className="mx-auto mt-3 h-px w-10 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+                <p className="mt-3 font-sans text-sm font-normal text-[#4A5568] sm:text-base">
                   {couple.groom.parents}
                 </p>
-                <p className="mt-1.5 font-sans text-[10px] font-light uppercase tracking-[0.25em] text-ink/40">
+                <p className="mt-1.5 font-sans text-[10px] font-light uppercase tracking-[0.25em] text-[#718096]">
                   {couple.groom.family}
                 </p>
               </div>
@@ -482,7 +464,7 @@ export default function InvitationPage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: 0.15 }}
-              className="group overflow-hidden rounded-3xl border border-gold/20 bg-white shadow-[0_18px_45px_-20px_rgba(74,14,24,0.3)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/40 hover:shadow-[0_26px_55px_-22px_rgba(74,14,24,0.45)]"
+              className="group overflow-hidden rounded-3xl border border-gold/30 bg-white shadow-[0_18px_45px_-20px_rgba(27,37,80,0.2)] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:shadow-[0_26px_55px_-22px_rgba(27,37,80,0.3)]"
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <Image
@@ -493,17 +475,17 @@ export default function InvitationPage() {
                 />
               </div>
               <div className="p-6 text-center sm:p-7">
-                <p className="font-sans text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
+                <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">
                   The Bride
                 </p>
-                <h3 className="mt-2 font-sans text-xl font-semibold tracking-tight text-maroon sm:text-2xl">
+                <h3 className="mt-2 font-sans text-xl font-bold tracking-tight text-[#1B2550] sm:text-2xl">
                   {couple.bride.name}
                 </h3>
-                <div className="mx-auto mt-3 h-px w-10 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-                <p className="mt-3 font-sans text-sm font-light text-ink/60 sm:text-base">
+                <div className="mx-auto mt-3 h-px w-10 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+                <p className="mt-3 font-sans text-sm font-normal text-[#4A5568] sm:text-base">
                   {couple.bride.parents}
                 </p>
-                <p className="mt-1.5 font-sans text-[10px] font-light uppercase tracking-[0.25em] text-ink/40">
+                <p className="mt-1.5 font-sans text-[10px] font-light uppercase tracking-[0.25em] text-[#718096]">
                   {couple.bride.family}
                 </p>
               </div>
@@ -516,30 +498,30 @@ export default function InvitationPage() {
       <section className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
         <SectionHeading label="Save The Date" title="Wedding Date & Time" />
 
-        <Card variant={scaleIn} className="mt-10 text-center sm:mt-12">
-          <p className="font-sans text-sm tracking-[0.35em] uppercase text-gold">
+        <Card variant={scaleIn} className="mt-10 text-center sm:mt-12 border-2 border-gold/35 shadow-[0_14px_40px_-16px_rgba(27,37,80,0.18)]">
+          <p className="font-sans text-sm tracking-[0.35em] uppercase text-gold font-semibold">
             Saturday
           </p>
-          <p className="mt-3 font-sans text-4xl tracking-[0.08em] text-maroon font-bold sm:text-6xl">
+          <p className="mt-3 font-sans text-5xl sm:text-6xl tracking-[0.08em] text-[#1B2550] font-bold drop-shadow-[0_2px_8px_rgba(180,140,53,0.2)]">
             20
           </p>
-          <p className="mt-2 font-sans text-lg tracking-[0.25em] uppercase text-maroon sm:text-xl">
+          <p className="mt-2 font-sans text-base sm:text-xl tracking-[0.25em] uppercase text-[#1B2550] font-semibold">
             December &middot; 2026
           </p>
-            <div className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:gap-4">
-            <div className="flex-1 rounded-2xl border border-gold/30 bg-gradient-to-br from-maroon to-maroon-deep px-4 py-4 shadow-[0_10px_25px_-12px_rgba(74,14,24,0.5)]">
-              <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold-light">
+          <div className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:gap-4">
+            <div className="flex-1 rounded-2xl border border-gold/40 bg-gradient-to-br from-[#162752] via-[#1B2550] to-[#0F1B38] px-4 py-4 shadow-[0_10px_25px_-12px_rgba(27,37,80,0.45)]">
+              <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold-light font-medium">
                 Ceremony
               </p>
-              <p className="mt-1 font-sans text-base text-ivory font-semibold sm:text-lg">
+              <p className="mt-1 font-sans text-base text-white font-bold sm:text-lg">
                 10.00 AM
               </p>
             </div>
-            <div className="flex-1 rounded-2xl border border-gold/30 bg-gradient-to-br from-maroon to-maroon-deep px-4 py-4 shadow-[0_10px_25px_-12px_rgba(74,14,24,0.5)]">
-              <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold-light">
+            <div className="flex-1 rounded-2xl border border-gold/40 bg-gradient-to-br from-[#162752] via-[#1B2550] to-[#0F1B38] px-4 py-4 shadow-[0_10px_25px_-12px_rgba(27,37,80,0.45)]">
+              <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold-light font-medium">
                 Reception
               </p>
-              <p className="mt-1 font-sans text-base text-ivory font-semibold sm:text-lg">
+              <p className="mt-1 font-sans text-base text-white font-bold sm:text-lg">
                 6.30 PM
               </p>
             </div>
@@ -547,9 +529,9 @@ export default function InvitationPage() {
         </Card>
       </section>
 
-      {/* 5. COUNTDOWN */}
-      <section ref={countdownRef} className="relative overflow-hidden py-14 sm:py-20">
-        <motion.div style={{ y: countdownBgY }} className="absolute -inset-y-20 inset-x-0 scale-[1.15]">
+      {/* 5. COUNTDOWN - Royal Midnight Sapphire */}
+      <section ref={countdownRef} className="relative overflow-hidden py-14 sm:py-20 bg-gradient-to-b from-[#0A1128] via-[#142149] to-[#0A1128] border-y border-gold/30">
+        <motion.div style={{ y: countdownBgY }} className="absolute -inset-y-20 inset-x-0 scale-[1.15] opacity-15 mix-blend-overlay pointer-events-none">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
@@ -557,36 +539,37 @@ export default function InvitationPage() {
             className="object-cover object-center"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-maroon-deep/80" />
+        {/* Soft golden ambient radiance */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(216,180,105,0.18)_0%,_transparent_70%)] pointer-events-none" />
 
         <div className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading light label="Counting Every Moment" title="The Big Day Is Near" />
 
-        <motion.div
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
-          }}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.4 }}
-          className="mt-10 grid grid-cols-4 gap-2 sm:gap-4"
-        >
-          {[
-            { value: days, label: "Days" },
-            { value: hours, label: "Hours" },
-            { value: minutes, label: "Minutes" },
-            { value: seconds, label: "Seconds" },
-          ].map((unit) => (
-            <motion.div
-              key={unit.label}
-              variants={popIn}
-              className="flex flex-col items-center rounded-2xl border border-gold-light/40 bg-ivory/10 px-2 py-4 backdrop-blur-sm sm:py-6"
-            >
-                <span className="font-sans text-2xl font-semibold text-ivory tabular-nums sm:text-4xl">
+          <motion.div
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+            }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            className="mt-10 grid grid-cols-4 gap-2 sm:gap-4"
+          >
+            {[
+              { value: days, label: "Days" },
+              { value: hours, label: "Hours" },
+              { value: minutes, label: "Minutes" },
+              { value: seconds, label: "Seconds" },
+            ].map((unit) => (
+              <motion.div
+                key={unit.label}
+                variants={popIn}
+                className="flex flex-col items-center rounded-2xl border border-gold/40 bg-white/10 px-2 py-4 backdrop-blur-md shadow-[0_8px_25px_rgba(0,0,0,0.35)] sm:py-6 hover:border-gold hover:bg-white/15 transition-all duration-300"
+              >
+                <span className="font-sans text-2xl font-bold text-white tabular-nums sm:text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
                   {String(unit.value).padStart(2, "0")}
                 </span>
-                <span className="mt-1 font-sans text-[8px] font-medium tracking-[0.25em] uppercase text-gold-light sm:text-[10px]">
+                <span className="mt-1 font-sans text-[8px] font-semibold tracking-[0.25em] uppercase text-gold-light sm:text-[10px]">
                   {unit.label}
                 </span>
               </motion.div>
@@ -595,7 +578,7 @@ export default function InvitationPage() {
         </div>
       </section>
 
-      {/* 6. WEDDING VENUE */}
+      {/* 6. WEDDING VENUES */}
       <section className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
         <SectionHeading label="Locations" title="Wedding Venues" />
 
@@ -604,26 +587,26 @@ export default function InvitationPage() {
             <Card key={venue.name} variant={i % 2 === 0 ? slideLeft : slideRight}>
               <div className="flex flex-col gap-5 sm:flex-row sm:gap-6">
                 <div className="flex-1 text-center sm:text-left">
-                  <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold sm:text-[11px]">
+                  <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold font-semibold sm:text-[11px]">
                     {venue.event}
                   </p>
-                  <h3 className="mt-2 font-sans text-xl uppercase text-maroon font-bold sm:text-2xl">
+                  <h3 className="mt-2 font-sans text-xl uppercase text-[#1B2550] font-bold sm:text-2xl">
                     {venue.name}
                   </h3>
-                  <p className="mt-3 font-sans text-sm italic text-ink/70 sm:text-base">
+                  <p className="mt-3 font-sans text-sm italic text-[#4A5568] sm:text-base">
                     {venue.address}
                   </p>
                   <a
                     href={`https://www.google.com/maps/dir/?api=1&destination=${venue.query}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 inline-block cursor-pointer rounded-full bg-gradient-to-r from-maroon via-maroon-deep to-maroon px-6 py-2.5 font-sans text-[10px] font-medium tracking-[0.25em] uppercase text-ivory shadow-[0_8px_20px_-4px_rgba(74,14,24,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-4px_rgba(74,14,24,0.5)] sm:text-[11px]"
+                    className="mt-5 inline-block cursor-pointer rounded-full bg-gradient-to-r from-[#162752] via-[#1B2550] to-[#0F1B38] border border-gold/40 px-6 py-2.5 font-sans text-[10px] font-semibold tracking-[0.25em] uppercase text-white shadow-[0_8px_20px_-4px_rgba(27,37,80,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-[0_12px_28px_-4px_rgba(27,37,80,0.55)] sm:text-[11px]"
                   >
                     Get Directions
                   </a>
                 </div>
 
-                <div className="h-48 w-full overflow-hidden rounded-2xl border border-gold/25 sm:h-auto sm:min-h-[220px] sm:w-72">
+                <div className="h-48 w-full overflow-hidden rounded-2xl border border-gold/30 sm:h-auto sm:min-h-[220px] sm:w-72">
                   <iframe
                     title={`Map - ${venue.name}`}
                     src={`https://maps.google.com/maps?q=${venue.query}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
@@ -640,7 +623,7 @@ export default function InvitationPage() {
       </section>
 
       {/* 7. WEDDING SCHEDULE */}
-      <section className="border-y border-gold/20 bg-champagne/50 py-14 sm:py-20">
+      <section className="border-y border-gold/25 bg-[#F1E8D9]/70 py-14 sm:py-20">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="Plan Your Day" title="Wedding Schedule" />
 
@@ -650,7 +633,7 @@ export default function InvitationPage() {
               whileInView={{ scaleY: 1 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 1.4, ease: "easeOut" }}
-              className="absolute bottom-4 left-[27px] top-4 w-px origin-top bg-gradient-to-b from-gold/60 via-gold/40 to-gold/60 sm:left-[31px]"
+              className="absolute bottom-4 left-[27px] top-4 w-px origin-top bg-gradient-to-b from-gold via-gold/60 to-gold sm:left-[31px]"
             />
             {schedule.map((row, i) => (
               <motion.div
@@ -662,24 +645,24 @@ export default function InvitationPage() {
                 transition={{ delay: i * 0.08 }}
                 className="group relative flex gap-5 pb-7 last:pb-0 sm:gap-7"
               >
-                <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/50 bg-ivory text-gold shadow-[0_6px_18px_-6px_rgba(74,14,24,0.3)] transition-all duration-300 group-hover:scale-110 group-hover:border-gold group-hover:bg-gradient-to-br group-hover:from-maroon group-hover:to-maroon-deep group-hover:text-gold-light sm:h-16 sm:w-16">
+                <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-gold/60 bg-white text-gold shadow-[0_6px_18px_-6px_rgba(27,37,80,0.2)] transition-all duration-300 group-hover:scale-110 group-hover:border-gold group-hover:bg-[#1B2550] group-hover:text-gold-light sm:h-16 sm:w-16">
                   {row.icon}
                 </div>
-                <div className="flex-1 rounded-2xl border border-gold/20 bg-white/95 p-5 shadow-[0_8px_22px_-12px_rgba(74,14,24,0.2)] transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/40 group-hover:shadow-[0_14px_32px_-12px_rgba(74,14,24,0.35)] sm:p-6">
+                <div className="flex-1 rounded-2xl border border-gold/30 bg-white/95 p-5 shadow-[0_8px_22px_-12px_rgba(27,37,80,0.15)] transition-all duration-300 group-hover:-translate-y-1 group-hover:border-gold/50 group-hover:shadow-[0_14px_32px_-12px_rgba(27,37,80,0.25)] sm:p-6">
                   <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
-                      <h3 className="font-sans text-lg font-semibold uppercase tracking-[0.08em] text-maroon sm:text-xl">
+                      <h3 className="font-sans text-lg font-bold uppercase tracking-[0.08em] text-[#1B2550] sm:text-xl">
                         {row.event}
                       </h3>
-                      <p className="mt-1.5 font-sans text-sm font-light text-ink/70 sm:text-base">
+                      <p className="mt-1.5 font-sans text-sm font-normal text-[#4A5568] sm:text-base">
                         {row.desc}
                       </p>
                     </div>
-                    <div className="shrink-0 rounded-2xl border border-gold/30 bg-gradient-to-br from-maroon to-maroon-deep px-4 py-2.5 text-center shadow-[0_8px_18px_-8px_rgba(74,14,24,0.45)] sm:px-5">
-                      <span className="block font-sans text-lg font-semibold leading-none text-gold-light sm:text-xl">
+                    <div className="shrink-0 rounded-2xl border border-gold/40 bg-gradient-to-br from-[#162752] via-[#1B2550] to-[#0F1B38] px-4 py-2.5 text-center shadow-[0_8px_18px_-8px_rgba(27,37,80,0.4)] sm:px-5">
+                      <span className="block font-sans text-lg font-bold leading-none text-gold-light sm:text-xl">
                         {row.time.split(" ")[0]}
                       </span>
-                      <span className="mt-1.5 block font-sans text-[10px] font-medium tracking-[0.3em] uppercase text-ivory">
+                      <span className="mt-1.5 block font-sans text-[10px] font-semibold tracking-[0.3em] uppercase text-white">
                         {row.time.split(" ")[1]}
                       </span>
                     </div>
@@ -701,7 +684,7 @@ export default function InvitationPage() {
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
-            className="absolute bottom-4 left-[27px] top-4 w-px origin-top bg-gradient-to-b from-gold/60 via-gold/40 to-gold/60 sm:left-[35px]"
+            className="absolute bottom-4 left-[27px] top-4 w-px origin-top bg-gradient-to-b from-gold via-gold/60 to-gold sm:left-[35px]"
           />
           {loveStory.map((milestone, i) => (
             <motion.div
@@ -713,16 +696,16 @@ export default function InvitationPage() {
               transition={{ delay: i * 0.15 }}
               className="relative flex gap-5 pb-10 last:pb-0 sm:gap-7"
             >
-              <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/50 bg-ivory shadow-[0_6px_18px_-6px_rgba(74,14,24,0.3)] sm:h-[70px] sm:w-[70px]">
-                <span className="font-sans text-xl text-gold sm:text-2xl">
+              <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-gold/60 bg-white shadow-[0_6px_18px_-6px_rgba(27,37,80,0.2)] sm:h-[70px] sm:w-[70px]">
+                <span className="font-sans text-xl text-gold sm:text-2xl font-bold">
                   {milestone.symbol}
                 </span>
               </div>
               <div className="pt-2 sm:pt-3">
-                <h3 className="font-sans text-base uppercase text-maroon font-semibold tracking-[0.12em] sm:text-lg">
+                <h3 className="font-sans text-base uppercase text-[#1B2550] font-bold tracking-[0.12em] sm:text-lg">
                   {milestone.title}
                 </h3>
-                <p className="mt-1.5 max-w-md font-sans text-sm italic text-ink/70 sm:text-base">
+                <p className="mt-1.5 max-w-md font-body text-sm italic text-[#4A5568] sm:text-base">
                   {milestone.desc}
                 </p>
               </div>
@@ -732,7 +715,7 @@ export default function InvitationPage() {
       </section>
 
       {/* 9. COUPLE GALLERY */}
-      <section className="border-y border-gold/20 bg-champagne/50 py-14 sm:py-20">
+      <section className="border-y border-gold/25 bg-[#F1E8D9]/70 py-14 sm:py-20">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="Moments Together" title="Couple Gallery" />
 
@@ -742,7 +725,7 @@ export default function InvitationPage() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
+              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border-2 border-gold/35 shadow-[0_12px_35px_-12px_rgba(27,37,80,0.22)]"
             >
               <Image
                 src="/images/1.png"
@@ -757,7 +740,7 @@ export default function InvitationPage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: 0.12 }}
-              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
+              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border-2 border-gold/35 shadow-[0_12px_35px_-12px_rgba(27,37,80,0.22)]"
             >
               <Image
                 src="/images/2.png"
@@ -765,8 +748,8 @@ export default function InvitationPage() {
                 fill
                 className="object-cover object-bottom transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-maroon-deep/70 to-transparent p-4 text-center">
-                <span className="font-sans text-[9px] font-medium tracking-[0.3em] uppercase text-ivory">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0A1128]/85 via-[#0A1128]/50 to-transparent p-4 text-center">
+                <span className="font-sans text-[9px] font-semibold tracking-[0.3em] uppercase text-gold-light">
                   Pre-shoot
                 </span>
               </div>
@@ -777,7 +760,7 @@ export default function InvitationPage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: 0.24 }}
-              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
+              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border-2 border-gold/35 shadow-[0_12px_35px_-12px_rgba(27,37,80,0.22)]"
             >
               <Image
                 src="/images/3.png"
@@ -785,8 +768,8 @@ export default function InvitationPage() {
                 fill
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-maroon-deep/70 to-transparent p-4 text-center">
-                <span className="font-sans text-[9px] font-medium tracking-[0.3em] uppercase text-ivory">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0A1128]/85 via-[#0A1128]/50 to-transparent p-4 text-center">
+                <span className="font-sans text-[9px] font-semibold tracking-[0.3em] uppercase text-gold-light">
                   Engagement
                 </span>
               </div>
@@ -797,7 +780,7 @@ export default function InvitationPage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: 0.36 }}
-              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border border-gold/25 shadow-[0_12px_35px_-12px_rgba(74,14,24,0.3)]"
+              className="group relative aspect-[3/4] overflow-hidden rounded-3xl border-2 border-gold/35 shadow-[0_12px_35px_-12px_rgba(27,37,80,0.22)]"
             >
               <Image
                 src="/images/4.png"
@@ -805,8 +788,8 @@ export default function InvitationPage() {
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-maroon-deep/70 to-transparent p-4 text-center">
-                <span className="font-sans text-[9px] font-medium tracking-[0.3em] uppercase text-ivory">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0A1128]/85 via-[#0A1128]/50 to-transparent p-4 text-center">
+                <span className="font-sans text-[9px] font-semibold tracking-[0.3em] uppercase text-gold-light">
                   Wedding Day
                 </span>
               </div>
@@ -815,9 +798,9 @@ export default function InvitationPage() {
         </div>
       </section>
 
-      {/* 10. PERSONALIZED GUEST SECTION */}
-      <section ref={guestRef} className="relative overflow-hidden py-14 sm:py-20">
-        <motion.div style={{ y: guestBgY }} className="absolute -inset-y-20 inset-x-0 scale-[1.15]">
+      {/* 10. PERSONALIZED GUEST SECTION - Royal Midnight Sapphire */}
+      <section ref={guestRef} className="relative overflow-hidden py-14 sm:py-20 bg-gradient-to-b from-[#0A1128] via-[#142149] to-[#0A1128] border-y border-gold/30">
+        <motion.div style={{ y: guestBgY }} className="absolute -inset-y-20 inset-x-0 scale-[1.15] opacity-15 mix-blend-overlay pointer-events-none">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
@@ -825,7 +808,7 @@ export default function InvitationPage() {
             className="object-cover object-center"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-maroon-deep/75" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(216,180,105,0.18)_0%,_transparent_70%)] pointer-events-none" />
 
         <div className="relative z-10 mx-auto w-full max-w-3xl px-4 text-center sm:px-6">
           <motion.div
@@ -834,13 +817,16 @@ export default function InvitationPage() {
             viewport={{ once: true, amount: 0.4 }}
             variants={fadeUp}
           >
-            <p className="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-light">
+            <p className="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-light font-semibold">
               A Special Note For You
             </p>
-            <h2 className="mt-4 font-sans text-2xl tracking-[0.08em] uppercase text-ivory font-bold sm:text-3xl">
+            <h2 className="mt-4 font-sans text-2xl tracking-[0.08em] uppercase text-white font-bold sm:text-3xl drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]">
               {guest},
             </h2>
-            <p className="mx-auto mt-5 max-w-xl font-sans text-base italic leading-relaxed text-ivory/90 sm:text-lg">
+            <div className="mx-auto mt-4 max-w-[200px] opacity-80">
+              <OrnamentalDivider />
+            </div>
+            <p className="mx-auto mt-5 max-w-xl font-body text-base sm:text-lg italic leading-relaxed text-champagne/95">
               We&rsquo;re delighted to invite you to share in our joy. Your presence at our wedding
               will mean the world to us.
             </p>
@@ -849,14 +835,14 @@ export default function InvitationPage() {
       </section>
 
       {/* 11. CONTACT INFORMATION */}
-      <section className="border-y border-gold/20 bg-champagne/50 py-14 sm:py-20">
+      <section className="border-y border-gold/25 bg-[#F1E8D9]/70 py-14 sm:py-20">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
           <SectionHeading label="Reach Out To Us" title="Contact Information" />
 
           <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6">
             <Card variant={slideLeft} className="text-center">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 font-sans text-[10px] font-medium tracking-[0.25em] uppercase text-gold">
+                <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sans text-[10px] font-semibold tracking-[0.25em] uppercase text-gold">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -871,15 +857,15 @@ export default function InvitationPage() {
                   </svg>
                   The Bride
                 </span>
-                <span className="font-sans text-xs font-light text-ink/50">111111111</span>
+                <span className="font-sans text-xs font-normal text-[#718096]">111111111</span>
               </div>
-              <h3 className="mt-4 font-sans text-xl font-semibold uppercase text-maroon sm:text-2xl">
+              <h3 className="mt-4 font-sans text-xl font-bold uppercase text-[#1B2550] sm:text-2xl">
                 {couple.bride.name}
               </h3>
               <div className="mt-5 flex justify-center gap-3">
                 <a
                   href="tel:111111111"
-                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-sans text-[10px] font-medium tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-maroon hover:bg-maroon hover:text-ivory hover:shadow-lg"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-[#FAF5EC] px-4 py-3 font-sans text-[10px] font-semibold tracking-[0.2em] uppercase text-[#1B2550] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-[#1B2550] hover:text-white hover:shadow-lg"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -899,7 +885,7 @@ export default function InvitationPage() {
                   href="https://wa.me/111111111"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-sans text-[10px] font-medium tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white hover:shadow-lg"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-50 px-4 py-3 font-sans text-[10px] font-semibold tracking-[0.2em] uppercase text-emerald-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white hover:shadow-lg"
                 >
                   <svg
                     viewBox="0 0 32 32"
@@ -916,7 +902,7 @@ export default function InvitationPage() {
 
             <Card variant={slideRight} className="text-center">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 font-sans text-[10px] font-medium tracking-[0.25em] uppercase text-gold">
+                <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 font-sans text-[10px] font-semibold tracking-[0.25em] uppercase text-gold">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -931,15 +917,15 @@ export default function InvitationPage() {
                   </svg>
                   The Groom
                 </span>
-                <span className="font-sans text-xs font-light text-ink/50">111111111</span>
+                <span className="font-sans text-xs font-normal text-[#718096]">111111111</span>
               </div>
-              <h3 className="mt-4 font-sans text-xl font-semibold uppercase text-maroon sm:text-2xl">
+              <h3 className="mt-4 font-sans text-xl font-bold uppercase text-[#1B2550] sm:text-2xl">
                 {couple.groom.name}
               </h3>
               <div className="mt-5 flex justify-center gap-3">
                 <a
                   href="tel:111111111"
-                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-sans text-[10px] font-medium tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-maroon hover:bg-maroon hover:text-ivory hover:shadow-lg"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-[#FAF5EC] px-4 py-3 font-sans text-[10px] font-semibold tracking-[0.2em] uppercase text-[#1B2550] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:bg-[#1B2550] hover:text-white hover:shadow-lg"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -959,7 +945,7 @@ export default function InvitationPage() {
                   href="https://wa.me/111111111"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold/40 bg-ivory/80 px-4 py-3 font-sans text-[10px] font-medium tracking-[0.2em] uppercase text-maroon shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white hover:shadow-lg"
+                  className="group flex flex-1 items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-50 px-4 py-3 font-sans text-[10px] font-semibold tracking-[0.2em] uppercase text-emerald-800 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#25D366] hover:bg-[#25D366] hover:text-white hover:shadow-lg"
                 >
                   <svg
                     viewBox="0 0 32 32"
@@ -978,95 +964,95 @@ export default function InvitationPage() {
       </section>
 
       {/* 12. DRESS CODE */}
-      <section className="border-y border-gold/20 bg-champagne/50 py-14 sm:py-20">
-        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
-          <SectionHeading label="What To Wear" title="Dress Code" />
+      <section className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
+        <SectionHeading label="What To Wear" title="Dress Code" />
 
-          <motion.div
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
-            }}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:mt-12 sm:gap-4"
-          >
-            {["Traditional", "Formal", "White & Gold Theme"].map((code) => (
-              <motion.span
-                key={code}
-                variants={popIn}
-                className="rounded-full border border-gold/40 bg-white/80 px-7 py-3 font-sans text-[10px] font-medium tracking-[0.25em] uppercase text-maroon shadow-[0_8px_22px_-8px_rgba(74,14,24,0.25)] sm:text-[11px]"
-              >
-                {code}
-              </motion.span>
-            ))}
-          </motion.div>
-        </div>
+        <motion.div
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-3 sm:mt-12 sm:gap-4"
+        >
+          {["Traditional", "Formal", "White & Gold Theme"].map((code) => (
+            <motion.span
+              key={code}
+              variants={popIn}
+              className="rounded-full border-2 border-gold/45 bg-white px-8 py-3.5 font-sans text-[11px] sm:text-xs font-bold tracking-[0.25em] uppercase text-[#1B2550] shadow-[0_6px_20px_-6px_rgba(27,37,80,0.15)] transition-all duration-300 hover:border-gold hover:shadow-lg hover:-translate-y-0.5"
+            >
+              {code}
+            </motion.span>
+          ))}
+        </motion.div>
       </section>
 
       {/* 13. ACCOMMODATION */}
-      <section className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
-        <SectionHeading label="Stay With Us" title="Accommodation" />
+      <section className="border-y border-gold/25 bg-[#F1E8D9]/70 py-14 sm:py-20">
+        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
+          <SectionHeading label="Stay With Us" title="Accommodation" />
 
-        <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-3 sm:gap-5">
-          {hotels.map((hotel, i) => (
-            <Card key={hotel.name} variant={popIn} delay={i * 0.1} className="text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-maroon to-maroon-deep shadow-[0_10px_25px_-10px_rgba(74,14,24,0.55)]">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-7 w-7 text-gold-light"
-                  aria-hidden="true"
-                >
-                  <path d="M3 21h18" />
-                  <path d="M5 21V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14" />
-                  <path d="M9 21v-4h6v4" />
-                  <path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01" />
-                </svg>
-              </div>
-              <div className="mt-4 flex items-center justify-center gap-1">
-                {[0, 1, 2, 3, 4].map((star) => (
+          <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-3 sm:gap-5">
+            {hotels.map((hotel, i) => (
+              <Card key={hotel.name} variant={popIn} delay={i * 0.1} className="text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#162752] via-[#1B2550] to-[#0F1B38] border border-gold/30 shadow-[0_10px_25px_-10px_rgba(27,37,80,0.4)]">
                   <svg
-                    key={star}
                     viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="h-3.5 w-3.5 text-gold"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-7 w-7 text-gold-light"
                     aria-hidden="true"
                   >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
+                    <path d="M3 21h18" />
+                    <path d="M5 21V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14" />
+                    <path d="M9 21v-4h6v4" />
+                    <path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01" />
                   </svg>
-                ))}
-              </div>
-              <h3 className="mt-2.5 font-sans text-base font-semibold text-maroon sm:text-lg">
-                {hotel.name}
-              </h3>
-              <div className="mx-auto mt-2 h-px w-10 bg-gold/40" />
-              <p className="mt-2 font-sans text-xs font-light text-ink/70 sm:text-sm">
-                {hotel.note}
-              </p>
-            </Card>
-          ))}
-        </div>
+                </div>
+                <div className="mt-4 flex items-center justify-center gap-1">
+                  {[0, 1, 2, 3, 4].map((star) => (
+                    <svg
+                      key={star}
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-3.5 w-3.5 text-gold"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
+                    </svg>
+                  ))}
+                </div>
+                <h3 className="mt-2.5 font-sans text-base font-bold text-[#1B2550] sm:text-lg">
+                  {hotel.name}
+                </h3>
+                <div className="mx-auto mt-2 h-px w-10 bg-gold/50" />
+                <p className="mt-2 font-sans text-xs font-normal text-[#4A5568] sm:text-sm">
+                  {hotel.note}
+                </p>
+              </Card>
+            ))}
+          </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-8 text-center font-sans text-sm italic text-ink/60"
-        >
-          Contact: Mrs. Kamala Perera &middot; 111111111 (for room reservations)
-        </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-8 text-center font-body text-base italic text-[#4A5568]"
+          >
+            Contact: Mrs. Kamala Perera &middot; 111111111 (for room reservations)
+          </motion.p>
+        </div>
       </section>
 
-      {/* 14. FOOTER */}
-      <footer className="relative overflow-hidden bg-maroon-deep py-14 text-center">
-        <div className="absolute inset-0 opacity-10">
+      {/* 14. FOOTER - Royal Midnight Sapphire */}
+      <footer className="relative overflow-hidden bg-gradient-to-b from-[#0E1A38] via-[#091126] to-[#050A17] py-14 text-center border-t-2 border-gold/35">
+        <div className="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none">
           <Image
             src="/images/BackgroundImage.png"
             alt=""
@@ -1075,20 +1061,20 @@ export default function InvitationPage() {
           />
         </div>
         <div className="relative z-10 px-4">
-          <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-gold-light">
+          <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-gold-light font-semibold">
             Thank You
           </p>
-          <h2 className="mt-3 font-sans text-2xl tracking-[0.14em] uppercase text-ivory font-bold sm:text-3xl">
+          <h2 className="mt-3 font-sans text-2xl tracking-[0.14em] uppercase text-white font-bold sm:text-3xl">
             We Can&rsquo;t Wait To Celebrate With You
           </h2>
           <div className="mx-auto mt-6 max-w-[220px]">
             <OrnamentalDivider />
           </div>
-          <p className="mt-6 font-sans text-base italic text-ivory/80">With Love,</p>
-          <p className="mt-2 font-sans text-xl tracking-[0.2em] uppercase text-gold-light sm:text-2xl">
-            Ashen <span className="text-ivory">&amp;</span> Nethmi
+          <p className="mt-6 font-body text-base italic text-champagne">With Love,</p>
+          <p className="mt-2 font-sans text-xl tracking-[0.2em] uppercase text-gold-light font-bold sm:text-2xl">
+            Ashen <span className="text-white font-normal">&amp;</span> Nethmi
           </p>
-          <p className="mt-4 font-sans text-[9px] tracking-[0.35em] uppercase text-ivory/50">
+          <p className="mt-4 font-sans text-[9px] tracking-[0.35em] uppercase text-champagne/60">
             12 &middot; 12 &middot; 2026 &mdash; Colombo, Sri Lanka
           </p>
         </div>
@@ -1104,7 +1090,7 @@ export default function InvitationPage() {
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
             onClick={scrollToTop}
             aria-label="Back to top"
-            className="fixed bottom-6 right-6 z-50 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/40 bg-gradient-to-br from-maroon/70 to-maroon-deep/70 shadow-[0_12px_30px_-10px_rgba(74,14,24,0.6)] backdrop-blur-xl transition-colors duration-300 hover:border-gold-light"
+            className="fixed bottom-6 right-6 z-50 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-2 border-gold/60 bg-gradient-to-br from-[#162752] to-[#0A1227] shadow-[0_12px_30px_-8px_rgba(27,37,80,0.6)] backdrop-blur-xl transition-all duration-300 hover:border-gold-light hover:scale-105"
           >
             <svg viewBox="0 0 56 56" className="pointer-events-none absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
               <circle

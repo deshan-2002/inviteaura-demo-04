@@ -92,7 +92,7 @@ export default function HeroInvite() {
               <p className="font-display text-[10px] tracking-[0.4em] text-gold uppercase">
                 The Wedding Of
               </p>
-              <h1 className="mt-4 whitespace-nowrap font-display text-[clamp(16px,4.8vw,20px)] sm:text-3xl tracking-[0.2em] sm:tracking-[0.25em] text-maroon font-bold uppercase">
+              <h1 className="mt-4 whitespace-nowrap font-display text-[clamp(16px,4.8vw,20px)] sm:text-3xl tracking-[0.2em] sm:tracking-[0.25em] text-navy font-bold uppercase">
                 <Letters text="Ashen" start={0.35} />{" "}
                 <span className="text-gold font-normal">
                   <Letters text="&" start={0.65} />
@@ -138,7 +138,7 @@ export default function HeroInvite() {
           }}
         />
         {/* subtle vignette for depth */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(74,14,24,0.18)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(27,37,80,0.12)_100%)]" />
         <div className="absolute inset-0 bg-ivory/20" />
       </div>
 
@@ -153,7 +153,7 @@ export default function HeroInvite() {
         <motion.div variants={fadeUp} className="flex w-full flex-col items-center pt-1 sm:pt-2">
           <OrnamentalDivider />
 
-          <h2 className="mt-2 sm:mt-3 font-display text-[11px] sm:text-sm md:text-base tracking-[0.24em] sm:tracking-[0.3em] text-maroon font-semibold uppercase drop-shadow-[0_1px_2px_rgba(246,238,224,0.9)]">
+          <h2 className="mt-2 sm:mt-3 font-display text-[11px] sm:text-sm md:text-base tracking-[0.24em] sm:tracking-[0.3em] text-navy font-semibold uppercase drop-shadow-[0_1px_2px_rgba(246,238,224,0.9)]">
             Together With Their Families
           </h2>
 
@@ -222,14 +222,14 @@ export default function HeroInvite() {
               alt="The couple"
               fill
               priority
-              className="object-contain drop-shadow-[0_18px_35px_rgba(74,14,24,0.28)]"
+              className="object-contain drop-shadow-[0_18px_35px_rgba(27,37,80,0.22)]"
             />
           </motion.div>
         </motion.div>
 
         {/* BOTTOM SECTION: Couple Names, Date & Button */}
         <motion.div variants={fadeUp} className="flex w-full flex-col items-center pb-1 sm:pb-2">
-          <h1 className="whitespace-nowrap font-display text-[clamp(15px,4.2vw,18px)] tracking-[0.14em] sm:text-2xl sm:tracking-[0.22em] md:text-3xl lg:text-4xl text-maroon font-bold uppercase drop-shadow-[0_1px_2px_rgba(74,14,24,0.12)]">
+          <h1 className="whitespace-nowrap font-display text-[clamp(15px,4.2vw,18px)] tracking-[0.14em] sm:text-2xl sm:tracking-[0.22em] md:text-3xl lg:text-4xl text-navy font-bold uppercase drop-shadow-[0_1px_2px_rgba(27,37,80,0.12)]">
             <Letters text="Ashen" start={3.0} />{" "}
             <span className="text-gold font-normal px-0.5 sm:px-1">
               <Letters text="&" start={3.25} />
@@ -237,22 +237,22 @@ export default function HeroInvite() {
             <Letters text="Nethmi" start={3.5} />
           </h1>
 
-          <p className="mt-1 sm:mt-2 font-body text-xs sm:text-base md:text-lg italic text-ink/80 font-medium tracking-wide">
+          <p className="mt-1 sm:mt-2 font-body text-xs sm:text-base md:text-lg italic text-[#2D3748] font-medium tracking-wide">
             12th December 2026 &middot; Colombo, Sri Lanka
           </p>
 
           <motion.button
-            whileHover={{ scale: 1.04, y: -2 }}
+            whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
             type="button"
             onClick={() => router.push("/invitation")}
-            className="relative mt-3 sm:mt-4 cursor-pointer overflow-hidden rounded-full border border-gold-light/70 bg-gradient-to-r from-maroon via-maroon-deep to-maroon px-7 py-2.5 sm:px-9 sm:py-3 font-sans text-[11px] sm:text-xs md:text-sm tracking-[0.22em] sm:tracking-[0.26em] text-ivory font-semibold uppercase shadow-[0_8px_22px_-3px_rgba(74,14,24,0.4),0_0_15px_rgba(212,185,124,0.25)] transition-all duration-300 hover:border-gold hover:shadow-[0_12px_28px_-3px_rgba(74,14,24,0.5),0_0_22px_rgba(212,185,124,0.4)]"
+            className="relative mt-3 sm:mt-4 cursor-pointer overflow-hidden rounded-full bg-[#1B2550] px-8 py-2.5 sm:px-10 sm:py-3 font-sans text-[11px] sm:text-xs md:text-sm tracking-[0.22em] sm:tracking-[0.26em] text-white font-semibold uppercase shadow-[0_8px_24px_-4px_rgba(27,37,80,0.5)] transition-all duration-300 hover:bg-[#141C3D] hover:shadow-[0_12px_28px_-4px_rgba(27,37,80,0.65)]"
           >
             <span className="relative z-10">Open Invitation</span>
             {/* flowing shine sweep */}
             <motion.span
               aria-hidden
-              className="absolute top-0 bottom-0 w-1/2 skew-x-[-20deg] bg-gradient-to-r from-transparent via-ivory/25 to-transparent"
+              className="absolute top-0 bottom-0 w-1/2 skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/20 to-transparent"
               initial={{ x: "-160%" }}
               animate={{ x: "360%" }}
               transition={{
