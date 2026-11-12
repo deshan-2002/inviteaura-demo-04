@@ -21,9 +21,41 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://inviteaura-demo-04.vercel.app");
+
+const siteTitle = "Ashen & Nethmi | Wedding Invitation";
+const siteDescription =
+  "Together with their families, request the honour of your presence. Saturday, 12th December 2026 · Colombo, Sri Lanka.";
+
 export const metadata: Metadata = {
-  title: "Ashen & Nethmi | Wedding Invitation",
-  description: "Together with their families, request the honour of your presence.",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    siteName: "Ashen & Nethmi Wedding",
+    title: siteTitle,
+    description: siteDescription,
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Ashen & Nethmi Wedding Invitation",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
