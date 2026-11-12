@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useScroll, useTransform, type Variants } from "framer-motion";
 import OrnamentalDivider from "@/components/OrnamentalDivider";
+import RsvpForm from "@/components/RsvpForm";
 
 const spring = { type: "spring", stiffness: 60, damping: 18, mass: 0.9 } as const;
 
@@ -326,9 +327,17 @@ export default function InvitationPage() {
           >
             <span>&larr;</span> <span>Back</span>
           </Link>
-          <span className="font-sans text-[11px] tracking-[0.35em] uppercase text-gold font-semibold sm:text-xs">
-            A &amp; N
-          </span>
+          <div className="flex items-center gap-4">
+            <a
+              href="#rsvp"
+              className="rounded-full border border-maroon/30 bg-maroon/10 px-3 py-1 font-sans text-[10px] font-semibold tracking-[0.25em] uppercase text-maroon transition-all hover:bg-maroon hover:text-ivory sm:text-xs"
+            >
+              RSVP
+            </a>
+            <span className="font-sans text-[11px] tracking-[0.35em] uppercase text-gold font-semibold sm:text-xs">
+              A &amp; N
+            </span>
+          </div>
         </div>
       </header>
 
@@ -1050,7 +1059,10 @@ export default function InvitationPage() {
         </div>
       </section>
 
-      {/* 14. FOOTER - Royal Midnight Sapphire */}
+      {/* 14. RSVP FORM */}
+      <RsvpForm />
+
+      {/* 15. FOOTER - Royal Midnight Sapphire */}
       <footer className="relative overflow-hidden bg-gradient-to-b from-[#0E1A38] via-[#091126] to-[#050A17] py-14 text-center border-t-2 border-gold/35">
         <div className="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none">
           <Image
